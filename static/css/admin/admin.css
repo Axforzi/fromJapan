@@ -1,0 +1,163 @@
+p, h1, h2, h3, *{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Century Gothic', Courier, monospace;
+}
+
+body{
+    height: 100vh;
+    background: rgb(77,22,87);
+    background: linear-gradient(90deg, rgba(77,22,87,1) 0%, rgba(49,30,103,1) 35%, rgba(52,128,145,1) 100%);
+    background: url("/static/img/login-brackground.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100%;
+}
+
+/* NAVBAR */
+.navbar{
+    height: 10%;
+    background: rgb(62, 29, 105) !important;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.452);
+}
+
+.navbar-brand{
+    margin: 0;
+    transition: all .3s ease;
+}
+
+.navbar-brand:hover{
+    color: rgba(255, 255, 255, 0.692) !important;
+    transition: all .3s ease;
+}
+
+.login-form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 90%;
+    flex-grow: 1;
+}
+
+/* MENU */
+.menu{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 90%;
+}
+
+.menu .box{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 40%;
+    height: 30%;
+    background-color: rgb(9, 34, 58);
+    border-radius: 10px;
+}
+
+.menu .box-links{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: space-evenly;
+}
+
+.menu h1{
+    color: white;
+}
+
+.menu a{
+    font-size: 30px;
+}
+
+.seccion{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+    padding-bottom: 10px;
+    width: 95%;
+    max-height: 83%;
+    background-color: rgba(255, 255, 255, 0.925);
+    border-radius: 20px;
+}
+
+.seccion h1{
+    font-size: 35px;
+    align-self: center;
+}
+
+
+.container-buttons{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.form-search{
+    display: flex;
+    align-items: center;
+    gap:20px;
+}
+#buscar{
+    width: 300px;
+}
+.form-search .form-select{
+    width: 120px;
+}
+
+.container-table{
+    overflow-x: auto;
+}
+
+.table-generos th:nth-child(1){
+    width: 80%;
+}
+
+/* AJUSTES ARTICULOS  */
+.table-articulos img{
+    height: 200px;
+}
+
+.table-articulos th:nth-child(1){
+    width: 10%;
+}
+
+.table-articulos th:nth-child(2){
+    width: 15%;
+}
+
+.table-articulos th:nth-child(5){
+    width: 10%;
+}
+
+.table-articulos th:nth-child(6){
+    width: 10%;
+}
+
+
+.pages{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.pages .btn{
+    margin: 5px;
+}
+
+.preview-container{
+    display: flex;
+    justify-content: center;
+}
+
+.file-preview{
+    display: none;
+    max-height: 200px;
+    padding: 10px;
+}

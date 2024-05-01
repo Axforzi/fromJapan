@@ -1,0 +1,75 @@
+{% extends "pages/base.html" %}
+{% block title %} fromJapan {% endblock %}
+
+{%block content %}
+
+<div class="carrusel" data-bs-ride="carousel">
+    {% for img in carrusel %}
+        <div class="item-carrusel">
+            <img class="" src="{{img.ruta}}" alt="{{img.titulo}}">
+            <h3 class="carrusel-caption">{{img.titulo}}</h3>
+            <a href="{{img.link}}" class="carrusel-link" class="btn btn-success">VER</a>
+            <div class="buttons">
+                <button class="fa-solid fa-chevron-left" onclick="anterior()"></button>
+                <button class="fa-solid fa-chevron-right" onclick="siguiente()"></button>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+<main class="content">
+    <h2>Animes recientes</h2>
+    <section class="animes elements">
+        {% for article in articlesAnimes %}
+            <div class="container-fluid p-0 b-none">
+                <a href="{{ url_for('index.get_anime', name=article.titulo) }}">
+                    <div class="card">
+                        <img class="card-img" src="{{article.portada}}">
+                        <div class="card-info">
+                            <h4 class="card-title">{{article.titulo}}</h4>
+                            <p class="card-descrip">{{article.sipnosis}}</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+    </section>
+    
+    <h2>Mangas recientes</h2>
+    <section class="mangas elements">
+        {% for article in articlesMangas %}
+            <div class="container-fluid p-0 b-none">
+                <a href="{{ url_for('index.get_manga', name=article.titulo) }}">
+                    <div class="card">
+                        <img class="card-img" src="{{article.portada}}">
+                        <div class="card-info">
+                            <h4 class="card-title">{{article.titulo}}</h4>
+                            <p class="card-descrip">{{article.sipnosis}}</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+    </section>
+    
+    <h2>Novelas recientes</h2>
+    <section class="novelas elements">
+        {% for article in articlesNovelas %}
+            <div class="container-fluid p-0 b-none">
+                <a href="{{ url_for('index.get_novela', name=article.titulo) }}">
+                    <div class="card">
+                        <img class="card-img" src="{{article.portada}}">
+                        <div class="card-info">
+                            <h4 class="card-title">{{article.titulo}}</h4>
+                            <p class="card-descrip">{{article.sipnosis}}</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+    </section>
+</main>
+
+<script src="/static/js/carrusel.js"></script>
+
+{% endblock %}

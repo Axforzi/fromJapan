@@ -1,0 +1,190 @@
+header{
+    align-items: center;
+    transition: .3s linear;
+    z-index: 200;
+}
+
+header .open-button{
+    display: none;
+    flex-direction: column;
+    position: relative;
+    justify-content: space-around;
+    padding: 5px;
+    height: 40px;
+    width: 40px;
+    position: absolute;
+    top: 13px;
+    right: 6px;
+    cursor: pointer;
+    background: none;
+    margin-right: 10px;
+    overflow: hidden;
+}
+
+header .open-button .line{
+    display: flex;
+    background: rgb(255, 255, 255);
+    height: 3px;
+    width: 85%;
+    border-radius: 20px;
+}
+
+.open-button .line:nth-child(1){
+    display: flex;
+    top: 5px;
+    position: absolute;
+    transition: .3s linear;
+}
+
+.open-button .line:nth-child(3){
+    display: flex;
+    bottom: 5px;
+    position: absolute;
+    transition: .3s linear;
+}
+
+.open-button .line:nth-child(2){
+    display: flex;
+    position: absolute;
+    transform: translate(0);
+    transition: .3s linear;
+}
+
+/* BUTON ACTIVADO */
+.active-open-button .line:nth-child(1){
+    display: flex;
+    position: absolute;
+    top: 45%;
+    left: 0;
+    transform: rotate(50deg);
+    transition: .3s linear;
+}
+
+.active-open-button .line:nth-child(3){
+    display: flex;
+    position: absolute;
+    top: 45%;
+    left: 0;
+    transform: rotate(-50deg);
+    transition: .3s linear;
+}
+
+.active-open-button .line:nth-child(2){
+    display: flex;
+    position: absolute;
+    transform: translate(100px);
+    transition: .3s linear;
+}
+
+@media screen and (max-width: 992px) {
+    .header-active{
+        position: fixed;
+        height: 100vh;
+        transition: .3s linear;
+        z-index: 200;
+    }
+
+    .header-active .navbar{
+        opacity: 1;
+        pointer-events: unset;
+        transition: .3s linear;
+    }
+
+    header .navbar{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        pointer-events: none;
+        opacity: 0;
+        transition: .3s linear;
+    }
+
+    header .navbar .logo{
+        display: flex;
+        flex-direction: column;
+        margin-right: 5px;
+        margin-top: 20px;
+        overflow: unset;
+    }
+
+    header .navbar .logo img{
+        margin-top: 50px;
+        height: 100px;
+    }
+
+    header .navbar .logo div{
+        display: none;
+        height: 55px;
+    }
+
+    header .navbar .container-fluid{
+        justify-content: center;
+        align-items: center;
+    }
+
+    header .navbar .navbar-collapse{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 35px;
+    }
+
+    /* BUSCADOR  */
+    header .search{
+        height: 60px;
+        width: 60px;
+        margin-bottom: 45px;
+    }
+
+    header .search .search-button{
+        padding: 16px 16px;
+        font-size: 30px;
+    }
+
+    header .search .search-input{
+        font-size: 30px;
+        padding: 10px;
+        padding-right: 0;
+    }
+
+    header .active-search{
+        width: 400px;
+    }
+
+    /* BOTON DE APERTURA  */
+    header .open-button{
+        display: flex;
+    }
+
+    .navbar .nav-item:nth-child(1){
+        display: unset;
+    }
+}
+
+
+/*CARRUSEL AJUSTES */
+@media screen and (max-width: 800px) {
+    .carrusel .item-carrusel{
+        width: 100%;
+    }
+
+    .carrusel-caption{
+        z-index: 39;
+        padding-top: 5px;
+    }
+
+    .item-carrusel::before{
+        left: -86px;
+    }
+
+    .item-carrusel::after{
+        right: -86px;
+    }
+
+    .item-carrusel .buttons{
+        padding-bottom: 13px;
+        padding-left: 50px;
+        padding-right: 50px;
+    }
+}

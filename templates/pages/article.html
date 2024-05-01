@@ -1,0 +1,97 @@
+{% extends "pages/base.html"%}
+
+{% block head%}
+{{ super() }}
+<link rel="stylesheet" href="/static/css/article.css">
+<link rel="stylesheet" href="/static/css/responsive/article.css">
+{% endblock%}
+
+{% block content %}
+<main>
+    <h2>{{ info.titulo }}</h2>
+    <div class="article-info">
+        <img class="card-img" src="{{ info.portada }}">
+        <div class="information">
+            <div class="description">
+                <div class="sipnosis">
+                    <h4>Sipnosis</h4>
+                    <p>{{ info.sipnosis}}</p>
+                </div>
+                <div class="extra-info">
+                    <div class="generos">
+                        <h4>Generos</h4>
+                        <p>
+                            {% for genero in info.generos %}
+                                <a href="#">{{genero}}</a>
+                            {% endfor %}
+                        </p>
+                    </div>
+                    <div class="estado">
+                        <h4>Estado</h4>
+                        <p> {{ info.estado }} </p>
+                    </div>
+                    <div class="autor">
+                        {% if info.tipo == 'anime' %}
+                            <h4>Editor</h4>
+                            <p>{{info.autor}}</p>
+                        {% else %}
+                            <h4>Autor</h4>
+                            <p>{{info.autor}}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="enlaces">
+                {% if info.tipo == 'anime' or info.tipo == 'manga' %}
+                    <h4> Puedes encontrar este {{info.tipo}} en: </h4>
+                {% else %}
+                    <h4> Puedes encontrar esta novela en: </h4>
+                {% endif %}
+                <table class="links">
+                    <thead>
+                        <tr>
+                            <th>Plataforma</th>
+                            <th>Enlace</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td> 
+                                {% if info.tipo == 'anime'%}
+                                <img src="/static/img/crunchyroll.png" style="width: 55px;"> 
+                                Crunchyroll
+                                {% else %}
+                                    <img src="/static/img/LOGO-CASA-LIBRO.png" alt="" style="height: 55px; width: 70px;"> La casa del libro
+                                {% endif %}
+                            </td>
+                            <td>
+                                <button class="enlace" data-id="{{info._id['$oid']}}" onclick="visitar(this.dataset.id)">Visitar sitio web</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+    const visitar = async (id) => {
+        try{
+            const data = {}; data["id"] = id;
+            const res = await fetch(`/article/${id}`, {
+                method: "POST", 
+                body: JSON.stringify(data),
+                headers: {"Content-Type" : "application/json"}
+            });
+            const json = await res.json();
+            
+            if(!res.ok) throw new Error(`Ocurrio un error ${res.status} - ${res.statusText}`);
+
+            window.open(`${json[0].link}`, "_blank");
+        } catch(err){
+            console.log(err);
+        }
+    };
+</script>
+{% endblock %}

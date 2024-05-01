@@ -1,0 +1,140 @@
+main{
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    padding: 20px;
+    gap: 15px;
+    background:var(--color-secondary);
+}
+
+h2{
+    border-bottom: 2px rgb(42, 245, 164) solid;
+    border-radius: 98px;
+    text-align: center;
+    text-align: center;
+    margin: 0;
+}
+
+.article-info{
+    display: grid;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    grid-template-columns: 25% 73.5%;
+    justify-items: center;
+    gap: 1.5%;
+}
+
+.article-info > img{
+    height: 400px;
+    width: 300px;
+    margin-bottom: 20px;
+    border-radius: 20px;
+}
+
+.article-info .information{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+.article-info .information h4{
+    margin-bottom: 10px;
+}
+
+.article-info .extra-info{
+    display: flex;
+    gap: 30px;
+}
+
+.article-info .description{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background: rgb(41, 32, 51);
+    padding: 20px;
+    border-radius: 20px;
+    color: white;
+}
+
+.article-info .description .sipnosis{
+    text-align: justify;
+    text-indent: 10px;
+}
+
+.article-info .generos p{
+    display: flex;
+    justify-content: start;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+
+.article-info .generos a{
+    border-radius: 20px;
+    padding: 5px 10px;
+    background: blueviolet;
+    color: white;
+    text-decoration: none;
+}
+
+.article-info .generos a:hover{
+    background: rgb(120, 38, 197);
+    transition: .1s linear;
+}
+
+.article-info .generos a:active{
+    background: blueviolet;
+    transition: .1s linear;
+}
+
+.article-info .enlaces{
+    display: flex;
+    flex-direction: column;
+    background: rgb(62 74 163);
+    padding: 20px;
+    border-radius: 20px;
+    color: white;
+}
+
+/* TABLA DE ENLACES */
+.links{
+    border-radius: 10px;
+    background: rgb(255, 255, 255);
+    color: black
+}
+.links td, .links th{
+    padding: 10px;
+}
+
+.links div{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.links img{
+    height: 50px;
+    width: 50px;
+    border-radius: 100%;
+}
+
+.links .enlace{
+    border: none;
+    color: white;
+    text-decoration: none;
+    border-radius: 20px;
+    padding: 10px 15px;
+    background: blueviolet;
+    transition: .1s linear;
+}
+
+.links .enlace:hover{
+    background: rgb(120, 38, 197);
+    transition: .1s linear;
+}
+
+.links .enlace:active{
+    background: blueviolet;
+    transition: .1s linear;
+}

@@ -1,0 +1,19 @@
+@media screen and (max-width: 992px) {
+    .article-info{
+        grid-template-columns: 1fr;
+        gap: 5px
+    }
+}
+
+@media screen and (max-width: 1220px) {
+    .article-info > img{
+        height: 350px;
+        width: 250px;
+        margin-bottom: 20px;
+        border-radius: 20px;
+    }
+
+    .article-info .links button{
+        font-size: 15px;
+    }
+}

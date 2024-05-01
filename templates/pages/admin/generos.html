@@ -1,0 +1,130 @@
+{% extends "pages/admin/base.html" %}
+
+{% block title %} Generos {% endblock %}
+
+{% block brand%}
+<a class="btn btn-dark" href="/admin"> Volver </a>
+{{super()}}
+{% endblock %}
+
+{% block content %}
+<main class="container-fluid seccion">
+  <h1>Generos</h1>
+  <button class="btn btn btn-primary shadow-none" data-bs-toggle="modal" data-bs-target="#modalNew">Nuevo</button>
+  <div class="container-table">
+    <table class="table table-generos">
+      <thead>
+        <tr>
+          <th scope="col">Nombre</th>
+          <th scope="col">Editar</th>
+          <th scope="col">Eliminar</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if generos[0] %}
+        {% for genero in generos[0] %}
+        <tr>
+          <td> {{genero.nombre}} </td>
+          <td> <button data-id="{{genero._id['$oid']}}" class="btn btn-secondary shadow-none btn-edit" data-bs-toggle="modal" data-bs-target="#modalEdit"> Editar </button> </td>
+          <td> <button data-id="{{genero._id['$oid']}}" class="btn btn-danger shadow-none btn-delete" data-bs-toggle="modal" data-bs-target="#modalDelete"> Eliminar </button> </td>
+        </tr>
+        {% endfor %}
+        {% else %}
+        <tr>
+          <td scope="row" colspan="4" style="text-align: center;">No hay datos!</td>
+        </tr>
+        {% endif %}
+      </tbody>
+    </table>
+    <div class="pages">
+      {% for i in range(generos[1]['count_pages']) %}
+        {% if current_page == i+1 %}
+          <a href="/admin/generos/page/{{i+1}}" class="btn btn-secondary">{{i+1}}</a>
+        {% else %}
+          <a href="/admin/generos/page/{{i+1}}" class="btn btn-dark">{{i+1}}</a>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</main>
+
+<!-- Modal - New -->
+<div class="modal fade" id="modalNew" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Nuevo - Genero</h5>
+        <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/admin/generos/new" method="POST" class="form-new-generos">
+          <input type="text" class="form-control shadow-none edit-input mb-3" placeholder="Nombre" name="nombre">
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary shadow-none close-btn" data-bs-dismiss="modal">Cancelar</button>
+            <input type="submit" value="Agregar" class="btn btn-primary shadow-none">
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal - Edit -->
+<div class="modal fade" id="modalEdit" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Editar - Genero</h5>
+        <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/admin/generos/edit" method="POST" class="form-edit-generos">
+          <input type="text" class="form-control shadow-none edit-input mb-3" placeholder="Nombre" name="nombre">
+          <input type="hidden" class="genero-id" name="id">
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary shadow-none close-btn" data-bs-dismiss="modal">Cancelar</button>
+            <input type="submit" value="Guardar cambios" class="btn btn-primary shadow-none">
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DELETE -->
+<div class="modal fade" id="modalDelete" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Eliminar - Genero</h5>
+        <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/admin/generos/delete" method="POST" class="form-delete-generos">
+          <p class="mb-3">Desea realmente eliminar este genero?</p>
+          <input type="hidden" class="genero-id" name="id">
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary shadow-none close-btn" data-bs-dismiss="modal">Cancelar</button>
+            <input type="submit" value="Eliminar" class="btn btn-danger shadow-none">
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST SUCCESS AND ERROR -->
+{% for category, msg in get_flashed_messages(with_categories=true) %}
+    <div class="toast align-items-center text-white {{ 'bg-success' if category == 'success' else 'bg-danger'}} border-0 position-absolute bottom-0 end-0 m-3" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000" data-bs-autohide="true">
+      <div class="d-flex">
+        <div class="toast-body">
+          {{msg}}
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto shadow-none" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+{% endfor %}
+
+<script src="/static/js/admin/generos.js"></script>
+
+{% endblock %}

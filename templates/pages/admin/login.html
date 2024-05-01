@@ -1,0 +1,43 @@
+{% extends "pages/admin/base.html" %}
+
+{% block title %} Login {% endblock%}
+
+{% block brand %} <span class="navbar-brand h1">Login</span>{% endblock %}
+
+{% block content %}
+
+<form action="/login" class="login-form" method="post">
+    <div class="form-floating mb-3">
+        <input type="text" class="form-control shadow-none" name="username" id="username" placeholder="username">
+        <label for="username">Usuario</label>
+    </div>
+    <div class="form-floating mb-3">
+        <input type="password" class="form-control shadow-none" name="password" id="password" placeholder="password">
+        <label for="password">Contraseña</label>
+    </div>
+    <input type="submit" class="btn btn-primary shadow-none" value="Iniciar sesión">
+</form>
+
+<!-- TOAST SUCCESS AND ERROR -->
+{% for category, msg in get_flashed_messages(with_categories=true) %}
+    <div class="toast align-items-center text-white {{ 'bg-success' if category == 'success' else 'bg-danger'}} border-0 position-absolute bottom-0 end-0 m-3" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000" data-bs-autohide="true">
+      <div class="d-flex">
+        <div class="toast-body">
+          {{msg}}
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto shadow-none" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+{% endfor %}
+
+<script>
+    // MESSAGES FOR CRUD
+    try {
+        const message = document.querySelector(".toast");
+        new bootstrap.Toast(message).show() 
+    } catch (err) {
+        console.log(err)
+    }
+</script>
+
+{% endblock %}

@@ -1,0 +1,135 @@
+{% extends "pages/admin/base.html" %}
+
+{% block brand%}
+<a class="btn btn-dark" href="/admin">Volver</a>
+{{super()}}
+{% endblock%}
+
+{% block content %}
+<main class="container-fluid seccion">
+    <h1>Carrusel</h1>
+    <button class="btn btn btn-primary shadow-none" data-bs-toggle="modal" data-bs-target="#modalNew">Nuevo</button>
+    <div class="container-table">
+        <table class="table table-articulos">
+            <thead>
+                <tr>
+                    <th scope="col">Imagen</th>
+                    <th scope="col">Titulo</th>
+                    <th scope="col">Ruta</th>
+                    <td scope="col">Editar</td>
+                    <td scope="col">Eliminar</td>
+                </tr>
+            </thead>
+            <tbody>
+              {% if imgs %}
+                {% for img in imgs%}
+                  <tr>
+                      <td><img src="{{img.ruta}}"></td>
+                      <td><p> {{img.titulo}} </p></td>
+                      <td> <p> Link: <a href="{{img.link}}"> {{img.link}} </a></p> </td>
+                      <td> <button data-id="{{img._id['$oid']}}" class="btn btn-secondary shadow-none btn-edit"
+                              data-bs-toggle="modal" data-bs-target="#modalEdit"> Editar </button> </td>
+                      <td> <button data-id="{{img._id['$oid']}}" class="btn btn-danger shadow-none btn-delete"
+                              data-bs-toggle="modal" data-bs-target="#modalDelete"> Eliminar </button> </td>
+                  </tr>
+                {% endfor %}
+              {% else%}
+                <tr>
+                  <td scope="row" colspan="5" style="text-align: center;">No hay datos!</td>
+                </tr>
+              {% endif%}
+            </tbody>
+        </table>
+    </div>
+</main>
+
+<!-- Modal - New -->
+<div class="modal fade" id="modalNew" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Nueva - Imagen </h5>
+          <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="/admin/carrusel/new" method="POST" class="form-new-carrusel" enctype="multipart/form-data">
+            <input type="text" class="form-control shadow-none edit-input mb-3" placeholder="Titulo" name="titulo">
+            <input type="text" class="form-control shadow-none mb-3" placeholder="Link" name="link">
+            <label for="img">Imagen:</label>
+            <div class="preview-container">
+              <img src="" alt="" class="file-preview">
+            </div>
+            <input type="file" accept="image/png, image/jpeg" class="form-control shadow-none mb-3" name="img" id="img" onchange="showPreviewNew(event)" required>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary shadow-none close-btn" data-bs-dismiss="modal">Cancelar</button>
+              <input type="submit" value="Agregar" class="btn btn-primary shadow-none">
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal - Edit -->
+<div class="modal fade" id="modalEdit" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Editar - Imagen </h5>
+          <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="/admin/carrusel/edit" method="POST" class="form-edit-carrusel" enctype="multipart/form-data">
+            <input type="text" class="form-control shadow-none edit-input mb-3" placeholder="Titulo" name="titulo">
+            <input type="text" class="form-control shadow-none link-input mb-3" placeholder="Link" name="link">
+            <label for="img">Imagen:</label>
+            <div class="preview-container">
+              <img src="" alt="" class="file-preview">
+            </div>
+            <input type="file" accept="image/png, image/jpeg" class="form-control shadow-none mb-3" name="img" id="img" onchange="showPreviewEdit(event)">
+            <input type="hidden" class="carrusel-id" name="id">
+            <input type="hidden" class="last-file" name="last-file">
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary shadow-none close-btn" data-bs-dismiss="modal">Cancelar</button>
+              <input type="submit" value="Modificar" class="btn btn-primary shadow-none">
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal - Delete -->
+  <div class="modal fade" id="modalDelete" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Eliminar - Imagen </h5>
+          <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="/admin/carrusel/delete" method="POST" class="form-delete-carrusel">
+            <div class="modal-footer">
+              <input type="hidden" name="id" class="carrusel-id">
+              <button type="button" class="btn btn-secondary shadow-none close-btn" data-bs-dismiss="modal">Cancelar</button>
+              <input type="submit" value="Eliminar" class="btn btn-primary shadow-none">
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% for category, msg in get_flashed_messages(with_categories=true) %}
+    <div class="toast align-items-center text-white {{ 'bg-success' if category == 'success' else 'bg-danger'}} border-0 position-absolute bottom-0 end-0 m-3" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000" data-bs-autohide="true">
+      <div class="d-flex">
+        <div class="toast-body">
+          {{msg}}
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto shadow-none" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+  {% endfor %}
+
+<script src="/static/js/admin/carrusel.js"></script>
+{% endblock %}

@@ -1,0 +1,112 @@
+{% extends 'pages/base.html'%}
+{% block head%}
+{{super()}}
+<link rel="stylesheet" href="/static/css/select.css">
+{% endblock%}
+{% block content %}
+<main class="content">
+    <h2>{%block title_section%} {% endblock %}</h2>
+    <section class="filters">
+        <form action="/{{route}}{{ '/filtros' if busqueda_route is not defined else ''}}" method="get" id="form-filtros">
+            <div class="form-select shadow-none select select-multiple" id="generos-select" tabindex="0">
+                {% if articles[2] is defined %}
+                    <input type="text" placeholder="Generos" class="select-element" id="generos" name="generos" value="{{articles[2].generos}}" readonly>
+                    <div class="select-options">
+                        <input type="text" class="select-search" placeholder="Buscar..." tabindex="-1" autocomplete="off">
+                        <div class="group-options">
+                            {% for genero in generos %}
+                                <div class="option {{'selected-option' if genero.nombre in articles[2].generos.split(' - ') else ''}}"> {{genero.nombre}} </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% else %}
+                    <input type="text" placeholder="Generos" class="select-element" id="generos" name="generos" readonly>
+                    <div class="select-options">
+                        <input type="text" class="select-search" placeholder="Buscar..." tabindex="-1" autocomplete="off">
+                        <div class="group-options">
+                            {% for genero in generos %}
+                                <div class="option"> {{genero.nombre}} </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="form-select shadow-none select" id="estado-select" tabindex="0">
+                {% if articles[2] is defined %}
+                    <input type="text" placeholder="Estado" class="select-element" id="estado" name="estado" value="{{articles[2].estado}}" readonly>
+                {% else %}
+                    <input type="text" placeholder="Estado" class="select-element" id="estado" name="estado" readonly>
+                {% endif %}
+                <div class="select-options">
+                    <div class="group-options">
+                        <div class="option">En emisión</div>
+                        <div class="option">Finalizado</div>
+                    </div>
+                </div>
+            </div>
+            <input type="submit" value="Filtrar" class="btn btn-primary btn-submit">
+        </form>
+    </section>
+
+    <section class="elements">
+        {% if articles[0] %}
+            {% for article in articles[0] %}
+                <div class="container-fluid p-0 b-none" style="align-items: center; height: 50vh;">
+                    <a href="{{ url_for('index.get_' + article.tipo, name=article.titulo) }}">
+                        <div class="card">
+                            <img class="card-img" src="{{article.portada}}">
+                            <div class="card-info">
+                                <h4 class="card-title">{{article.titulo}}</h4>
+                                <p class="card-descrip">{{article.sipnosis}}</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="container-fluid p-0 b-none" style="align-items: center; height: 50vh;">
+                <h3>No se han encontrado articulos.</h3>
+            </div>
+        {% endif %}
+    </section>
+    
+    <div class="pages">
+        {% if articles[2] is defined %}
+            {% if articles[1].count_pages != 0 %}
+                {% for i in range(articles[1].count_pages) %}
+                    {% if current_page == i+1 %}
+                        <button data-page="/{{route}}{{ '/filtros' if busqueda_route is not defined else ''}}/page/{{i+1}}" onclick="updateFormFilters(event)" class="btn btn-secondary">{{i+1}}</button>
+                    {% else %}
+                        <button data-page="/{{route}}{{ '/filtros' if busqueda_route is not defined else ''}}/page/{{i+1}}" onclick="updateFormFilters(event)" class="btn btn-dark">{{i+1}}</button>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <button data-page="/{{route}}{{ '/filtros' if busqueda_route is not defined else ''}}/page/1" onclick="updateFormFilters(event)" class="btn btn-secondary">1</button>
+            {% endif %}
+        {% else %}
+            {% if articles[1].count_pages != 0 %}
+                {% for i in range(articles[1].count_pages) %}
+                    {% if current_page == i+1 %}
+                        <a href="/{{route}}/page/{{i+1}}" class="btn btn-secondary">{{i+1}}</a>
+                    {% else %}
+                        <a href="/{{route}}/page/{{i+1}}" class="btn btn-dark">{{i+1}}</a>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <a href="/{{route}}/page/1" class="btn btn-secondary">1</a>
+            {% endif %}
+        {% endif %}
+    </div>
+</main>
+
+<script src="/static/js/select.js"></script>
+<script>
+    updateOptionsSelect()
+
+    const updateFormFilters = (e) => {
+        const formFiltros = document.querySelector("#form-filtros")
+        formFiltros.action = e.target.dataset.page
+        formFiltros.submit()
+    };
+</script>
+{% endblock %}

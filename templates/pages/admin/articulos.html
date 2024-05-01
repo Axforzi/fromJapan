@@ -1,0 +1,258 @@
+{% extends "pages/admin/base.html" %}
+
+{% block title %} Articulos {% endblock %}
+
+{% block brand%}
+<a class="btn btn-dark" href="/admin"> Volver </a>
+{{super()}}
+{% endblock %}
+
+{% block content %}
+<main class="container-fluid seccion">
+    <h1>Articulos</h1>
+    <div class="container-buttons">
+        <form action="/admin/articulos/buscar" class="form-search" method="get">
+            <input type="text" class="form-control shadow-none" name="buscar" id="buscar" value="{{articulos[2]['buscar'] if articulos[2] is defined else ''}}" placeholder="Buscar...">
+            <div class="form-select shadow-none select" id="tipoSearch" tabindex="0">
+                <input type="text" placeholder="Selecciona el tipo..." class="select-element" id="tipo" name="tipo" value="{{articulos[2]['tipo'] | capitalize if articulos[2] is defined else 'Todos'}}" readonly>
+                <div class="select-options">
+                    <div class="group-options">
+                        <div class="option">Todos</div>
+                        <div class="option">Anime</div>
+                        <div class="option">Manga</div>
+                        <div class="option">Novela</div>
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-primary" onclick="submitFormSearch(event)"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </form>
+        <button class="btn btn btn-primary shadow-none" data-bs-toggle="modal" data-bs-target="#modalNew">Nuevo</button>
+    </div>
+    <div class="container-table">
+        <table class="table table-articulos">
+            <thead>
+                <tr>
+                    <th scope="col">Portada</th>
+                    <th scope="col">Titulo</th>
+                    <th scope="col">Tipo</th>
+                    <th scope="col">Generos</th>
+                    <th scope="col">Editar</th>
+                    <th scope="col">Eliminar</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if articulos[0] %}
+                {% for articulo in articulos[0] %}
+                <tr>
+                    <td><img src="{{articulo.portada}}"></td>
+                    <td>{{articulo.titulo}}</td>
+                    <td>{{articulo.tipo | capitalize}}</td>
+                    <td>{{articulo.generos | join(", ")}}</td>
+                    <td> <button data-id="{{articulo._id['$oid']}}" class="btn btn-secondary shadow-none btn-edit"
+                            data-bs-toggle="modal" data-bs-target="#modalEdit"> Editar </button> </td>
+                    <td> <button data-id="{{articulo._id['$oid']}}" class="btn btn-danger shadow-none btn-delete"
+                            data-bs-toggle="modal" data-bs-target="#modalDelete"> Eliminar </button> </td>
+                </tr>
+                {% endfor %}
+                {% else %}
+                <tr>
+                    <td scope="row" colspan="5" style="text-align: center;">No hay datos!</td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
+        <div class="pages">
+            {% if busqueda is defined %}
+                {% for i in range(articulos[1]['count_pages']) %}
+                    {% if current_page == i+1 %}
+                        <button data-page="/admin/articulos/buscar/page/{{i+1}}" onclick="pageFormSearch(event)" class="btn btn-secondary">{{i+1}}</button>
+                    {% else %}
+                        <button data-page="/admin/articulos/buscar/page/{{i+1}}" onclick="pageFormSearch(event)" class="btn btn-dark">{{i+1}}</button>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                {% for i in range(articulos[1]['count_pages']) %}
+                    {% if current_page == i+1 %}
+                        <a href="/admin/articulos/page/{{i+1}}" class="btn btn-secondary">{{i+1}}</a>
+                    {% else %}
+                        <a href="/admin/articulos/page/{{i+1}}" class="btn btn-dark">{{i+1}}</a>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</main>
+
+<!-- Modal - New -->
+<div class="modal fade" id="modalNew" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Nuevo - Articulo</h5>
+                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="/admin/articulos/new" method="POST" class="form-new-articulo" enctype="multipart/form-data">
+                    <label for="img" class="mb-2 ms-1">Portada (Imagen)</label>
+                    <div class="preview-container">
+                        <img src="" alt="" class="file-preview">
+                    </div>
+                    <input type="file" accept="image/png, image/jpeg" class="form-control shadow-none mb-3" name="img" id="img" onchange="showPreviewNew(event)" required>
+                    <input type="text" placeholder="Titulo" class="form-control mb-3 shadow-none" id="titulo" name="titulo">
+                    <textarea name="sipnosis" class="form-control mb-3 shadow-none" id="sipnosis" cols="30" rows="5"></textarea>
+                    <input type="text" class="form-control mb-3 shadow-none" placeholder="Autor" name="autor" id="autor">
+                    <input type="text" class="form-control mb-3 shadow-none" placeholder="Link" name="link" id="link">
+                    <div class="form-select shadow-none select mb-3" id="tipoNew" tabindex="0">
+                        <input type="text" placeholder="Selecciona el tipo..." class="select-element" id="tipo" name="tipo" readonly>
+                        <div class="select-options">
+                            <div class="group-options">
+                                <div class="option">Anime</div>
+                                <div class="option">Manga</div>
+                                <div class="option">Novela</div>
+                            </div>
+                        </div>
+                    </div> 
+                    <div class="form-select shadow-none select mb-3" id="estado-select" tabindex="0">
+                        <input type="text" placeholder="Estado" class="select-element" id="estado" name="estado" readonly>
+                        <div class="select-options">
+                            <div class="group-options">
+                                <div class="option">En emisión</div>
+                                <div class="option">Finalizado</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-select shadow-none select select-multiple mb-3" id="generosNew" tabindex="0">
+                        <input type="text" placeholder="Selecciona los generos..." class="select-element" id="generos" name="generos" readonly>
+                        <div class="select-options">
+                            <input type="text" class="select-search" placeholder="Buscar..." tabindex="-1" autocomplete="off">
+                            <div class="group-options">
+                                {% for genero in generos %}
+                                    <div class="option"> {{genero.nombre}} </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary shadow-none close-btn"
+                            data-bs-dismiss="modal">Cancelar</button>
+                        <input type="submit" value="Agregar" class="btn btn-primary shadow-none">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal - Edit -->
+<div class="modal fade" id="modalEdit" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Editar - Articulo</h5>
+                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="/admin/articulos/edit" method="POST" class="form-edit-articulos" enctype="multipart/form-data">
+                    <label for="img" class="mb-2 ms-1">Portada (Imagen)</label>
+                    <div class="preview-container">
+                        <img src="" alt="" class="file-preview">
+                    </div>
+                    <input type="file" accept="image/png, image/jpeg" class="form-control shadow-none mb-3" name="img" id="img" onchange="showPreviewEdit(event)">
+                    <input type="text" placeholder="Titulo" class="form-control mb-3 shadow-none" id="titulo" name="titulo">
+                    <textarea name="sipnosis" class="form-control mb-3 shadow-none" id="sipnosis" cols="30" rows="5"></textarea>
+                    <input type="text" class="form-control mb-3 shadow-none" placeholder="Autor" name="autor" id="autor">
+                    <input type="text" class="form-control mb-3 shadow-none" placeholder="Link" name="link" id="link">
+                    <div class="form-select shadow-none select mb-3" id="tipoEdit" tabindex="0">
+                        <input type="text" placeholder="Selecciona el tipo..." class="select-element" id="tipo" name="tipo" readonly>
+                        <div class="select-options">
+                            <div class="group-options">
+                                <div class="option">Anime</div>
+                                <div class="option">Manga</div>
+                                <div class="option">Novela</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-select shadow-none select mb-3" id="estado-select" tabindex="0">
+                        <input type="text" placeholder="Estado" class="select-element" id="estado" name="estado" readonly>
+                        <div class="select-options">
+                            <div class="group-options">
+                                <div class="option">En emisión</div>
+                                <div class="option">Finalizado</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-select shadow-none select select-multiple mb-3" id="generosEdit" tabindex="0">
+                        <input type="text" placeholder="Selecciona los generos..." class="select-element" id="generos" name="generos" readonly>
+                        <div class="select-options">
+                            <input type="text" class="select-search" placeholder="Buscar..." tabindex="-1" autocomplete="off">
+                            <div class="group-options">
+                                {% for genero in generos %}
+                                    <div class="option"> {{genero.nombre}} </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" class="articulo-id" name="id">
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary shadow-none close-btn"
+                            data-bs-dismiss="modal">Cancelar</button>
+                        <input type="submit" value="Guardar cambios" class="btn btn-primary shadow-none">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL DELETE -->
+<div class="modal fade" id="modalDelete" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Eliminar - Articulo</h5>
+                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="/admin/articulos/delete" method="POST" class="form-delete-articulo">
+                    <p class="mb-3">Desea realmente eliminar este genero?</p>
+                    <input type="hidden" class="articulo-id" name="id">
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary shadow-none close-btn"
+                            data-bs-dismiss="modal">Cancelar</button>
+                        <input type="submit" value="Eliminar" class="btn btn-danger shadow-none">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- TOAST SUCCESS AND ERROR -->
+{% for category, msg in get_flashed_messages(with_categories=true) %}
+    <div class="toast align-items-center text-white {{ 'bg-success' if category == 'success' else 'bg-danger'}} border-0 position-absolute bottom-0 end-0 m-3" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000" data-bs-autohide="true">
+      <div class="d-flex">
+        <div class="toast-body">
+          {{msg}}
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto shadow-none" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+{% endfor %}
+
+<script src="/static/js/select.js"></script>
+<script src="/static/js/admin/articulos.js"></script>
+<script>
+    const submitFormSearch = (evt) => {
+        evt.preventDefault()
+        const formSearch = document.querySelector(".form-search");
+        formSearch.action = "/admin/articulos/buscar"
+        formSearch.submit()
+    }
+
+    const pageFormSearch = (evt) => {
+        const formSearch = document.querySelector(".form-search");
+        formSearch.action = evt.target.dataset.page;
+        formSearch.submit();
+    };
+</script>
+{% endblock %}
