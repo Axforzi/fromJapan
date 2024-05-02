@@ -52,7 +52,7 @@ def new_articulo_service():
     if (extension == ".png") or (extension == ".jpg") or (extension == ".jpeg"):
         data = articulos(**article)
         created = data.save()
-        file.save(os.path.join(os.getcwd(), "static\\img\\portadas", filename))
+        file.save(os.path.join(os.getcwd(), "static", "img", "portadas", filename))
 
         return 1 if created else 2
     else:
@@ -79,8 +79,8 @@ def edit_articulo_service(id):
             article["portada"] = path_route
             updated = data.update(**article)
 
-            os.remove(os.path.join(os.getcwd(), "static\\img\\portadas", data.portada.split("/")[-1]))
-            file.save(os.path.join(os.getcwd(), "static\\img\\portadas", filename))
+            os.remove(os.path.join(os.getcwd(), "static", "img", "portadas", data.portada.split("/")[-1]))
+            file.save(os.path.join(os.getcwd(), "static", "img", "portadas", filename))
 
             return 1 if updated else 2
         else:
@@ -92,7 +92,7 @@ def edit_articulo_service(id):
 def delete_articulo_service(id):
     data = articulos.objects(id=ObjectId(id)).first()
     
-    os.remove(os.path.join(os.getcwd(), "static\\img\\portadas", data.portada.split("/")[-1]))
+    os.remove(os.path.join(os.getcwd(), "static", "img", "portadas", data.portada.split("/")[-1]))
     data.delete()
     return data
 
@@ -185,7 +185,7 @@ def new_carrusel_service():
     if (extension == ".png") or (extension == ".jpg") or (extension == ".jpeg"):
         path_name = "/static/img/carrusel/" + filename
         data = carrusel(titulo = request.form.get("titulo"), link = request.form.get("link"), ruta = path_name)
-        file.save(os.path.join(os.getcwd(), "static\\img\\carrusel", filename))
+        file.save(os.path.join(os.getcwd(), "static", "img", "carrusel", filename))
         created = data.save()
         return 1 if created else 2
     else:
@@ -202,13 +202,13 @@ def edit_carrusel_service(id):
     if file.filename != "":
         # VALIDATE EXTENSION
         if (extension == ".png") or (extension == ".jpg") or (extension == ".jpeg"):
-            os.remove(os.path.join(os.getcwd(), "static\\img\\carrusel", request.form.get("last-file"))) # ELIMINAR ANTERIOR IMG
+            os.remove(os.path.join(os.getcwd(), "static", "img", "carrusel", request.form.get("last-file"))) # ELIMINAR ANTERIOR IMG
             path_name = "/static/img/carrusel/" + filename
 
             #SAVE FILE AND INFO ON THE DB
             updated = data.update(titulo = request.form.get("titulo"), link = request.form.get("link"), ruta = path_name, updatedAt = datetime.datetime.now)
-            os.remove(os.path.join(os.getcwd(), "static\\img\\carrusel", data.ruta.split("/")[-1]))
-            file.save(os.path.join(os.getcwd(), "static\\img\\carrusel", filename))
+            os.remove(os.path.join(os.getcwd(), "static", "img", "carrusel", data.ruta.split("/")[-1]))
+            file.save(os.path.join(os.getcwd(), "static", "img", "carrusel", filename))
             
             return 1 if updated else 2
         else:
@@ -219,6 +219,6 @@ def edit_carrusel_service(id):
 
 def delete_carrusel_service(id):
     data = carrusel.objects(id=ObjectId(id)).first()
-    os.remove(os.path.join(os.getcwd(), "static\\img\\carrusel",data.ruta.split("/")[-1]))
+    os.remove(os.path.join(os.getcwd(), "static", "img", "carrusel", data.ruta.split("/")[-1]))
     data.delete()
     return data
