@@ -1,10 +1,10 @@
 <p align="center">
-  <img src="https://github.com/Axforzi/fromJapan/assets/98427019/028e686e-36da-4791-ac54-a65d0429fd16">
+  <img style='height:150px' src="https://github.com/Axforzi/fromJapan/assets/98427019/4ef5ee43-0be9-4006-94cd-b5faf17c0a5e">
 </p>
 
-<h1> fromJAPAN </h1>
+<h1> Scraper de juegos </h1>
 
-<p> Es un sitio web que sirve a modo de catalogo, para poder encontrar contenido de entratenimiento japones tal como lo es el anime, mangas o novelas ligeras. </p>
+<p> Un sitio web creado en flask y que utiliza scrapy para obtener la información sobre juegos de Steam, Epic Games Store y GOG. Muchas cosas se pueden mejorar pero esta es solo una prueba que he utilizado para aprender a usar scrapy con flask. </p>
 
 <h2> Ver el sitio web </h2>
-<p> Puedes acceder al sitio web dando click <a href="https://fromjapan.onrender.com" target"_blank"> aquí </a>. </p>
+<p> Puedes acceder al sitio web dando click <a href="https://gamescraper.onrender.com" target"_blank"> aquí </a>. </p>
