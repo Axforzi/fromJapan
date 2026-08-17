@@ -13,7 +13,45 @@
         border-radius: 20px;
     }
 
-    .article-info .links button{
+    .article-info .links .enlace{
         font-size: 15px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .filters form{
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .article-info > img{
+        height: auto;
+        width: 100%;
+        max-width: 250px;
+    }
+
+    .article-info .extra-info{
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .article-info .links{
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .article-info .description{
+        padding: 15px;
+    }
+
+    .article-info .enlaces{
+        padding: 15px;
+    }
+
+    .article-info .links td, .article-info .links th{
+        padding: 8px;
     }
 }

@@ -1,0 +1,68 @@
+/* ADMIN RESPONSIVE */
+@media screen and (max-width: 992px) {
+    .menu .box{
+        width: 80%;
+        height: auto;
+        padding: 20px;
+    }
+
+    .menu .box-links{
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .menu a{
+        font-size: 24px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .seccion{
+        width: 98%;
+    }
+
+    .container-buttons{
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+    }
+
+    .form-search{
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .form-search #buscar{
+        width: 100%;
+    }
+
+    .table-generos th:nth-child(1){
+        width: auto;
+    }
+
+    .table-articulos th:nth-child(1),
+    .table-articulos th:nth-child(2),
+    .table-articulos th:nth-child(5),
+    .table-articulos th:nth-child(6){
+        width: auto;
+    }
+
+    .container-table{
+        overflow-x: auto;
+    }
+
+    .preview-container img{
+        max-width: 100%;
+        height: auto;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .seccion h1{
+        font-size: 26px;
+    }
+
+    .form-search .form-select{
+        width: 100%;
+    }
+}

@@ -12,11 +12,26 @@ p, h1, h2, h3, h4, *{
     box-sizing: border-box;
 }
 
+/* SCROLL SUAVE EN TODA LA PÁGINA (compensa el header fijo) */
+html{
+    scroll-behavior: smooth;
+    scroll-padding-top: 75px;
+}
+
+/* FOOTER PEGADO AL FONDO CON POCO CONTENIDO */
+body{
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
 header{
     display: flex;
     height: 66px;
     width: 100%;
     top: 0;
+    position: sticky;
+    z-index: 300;
     font-family: "Century Gothic", Helvetica, sans-serif;
     background: var(--color-primary);
 }
@@ -145,4 +160,44 @@ header{
     align-items: center;
     justify-content: center;
     color: rgba(255, 255, 255, 0.918);
+}
+
+/* SECCIÓN ACTIVA EN EL MENÚ */
+.navbar-nav .nav-link.active{
+    color: var(--color-green);
+    border-bottom: 3px solid var(--color-green);
+}
+
+/* BOTÓN VOLVER ARRIBA */
+#btn-arriba{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    height: 50px;
+    width: 50px;
+    border: none;
+    border-radius: 100%;
+    background: var(--color-primary);
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all .3s ease;
+    z-index: 500;
+}
+
+#btn-arriba.visible{
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+#btn-arriba:hover{
+    background: var(--color-green);
+    color: var(--color-primary);
 }

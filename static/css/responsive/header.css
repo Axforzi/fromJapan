@@ -149,7 +149,7 @@ header .open-button .line{
     }
 
     header .active-search{
-        width: 400px;
+        width: min(400px, 90vw);
     }
 
     /* BOTON DE APERTURA  */
@@ -169,6 +169,12 @@ header .open-button .line{
         width: 100%;
     }
 
+    .carrusel img{
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
     .carrusel-caption{
         z-index: 39;
         padding-top: 5px;
@@ -186,5 +192,24 @@ header .open-button .line{
         padding-bottom: 13px;
         padding-left: 50px;
         padding-right: 50px;
+    }
+}
+
+/* CARDS Y CONTENIDO EN PANTALLAS MUY ESTRECHAS */
+@media screen and (max-width: 480px) {
+    .elements{
+        justify-content: center;
+    }
+
+    .elements > div{
+        width: auto;
+    }
+
+    .content{
+        padding: 15px;
+    }
+
+    .carrusel .carrusel-dots{
+        bottom: 75px;
     }
 }

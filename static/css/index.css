@@ -93,7 +93,6 @@ h2{
     padding: 5px;
     padding-top: 0;
     overflow-y: auto;
-    text-align: justify;
     text-indent: 10px;
 }
 
@@ -274,6 +273,37 @@ h2{
 .buttons button:hover{
     color: var(--color-green);
     transition: color .3s ease;
+}
+
+/* INDICADORES DEL CARRUSEL */
+.carrusel .carrusel-dots{
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    position: absolute;
+    bottom: 95px;
+    left: 0;
+    width: 100%;
+    z-index: 60;
+}
+
+.carrusel .carrusel-dots .dot{
+    height: 12px;
+    width: 12px;
+    border-radius: 100%;
+    border: 2px solid white;
+    background: rgba(255, 255, 255, 0.25);
+    cursor: pointer;
+    transition: background .3s ease, transform .2s ease;
+}
+
+.carrusel .carrusel-dots .dot:hover{
+    transform: scale(1.2);
+}
+
+.carrusel .carrusel-dots .dot.active{
+    background: var(--color-green);
+    border-color: var(--color-green);
 }
 
 .carrusel::before{

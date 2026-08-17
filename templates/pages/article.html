@@ -32,7 +32,7 @@
                     </div>
                     <div class="autor">
                         {% if info.tipo == 'anime' %}
-                            <h4>Editor</h4>
+                            <h4>Estudio</h4>
                             <p>{{info.autor}}</p>
                         {% else %}
                             <h4>Autor</h4>
@@ -55,43 +55,33 @@
                         </tr>
                     </thead>
                     <tbody>
+                        {% for enlace in info.links %}
                         <tr>
-                            <td> 
-                                {% if info.tipo == 'anime'%}
-                                <img src="/static/img/crunchyroll.png" style="width: 55px;"> 
-                                Crunchyroll
-                                {% else %}
-                                    <img src="/static/img/LOGO-CASA-LIBRO.png" alt="" style="height: 55px; width: 70px;"> La casa del libro
-                                {% endif %}
+                            <td>
+                                <div>
+                                    <img src="{{ enlace.logo }}" alt="{{ enlace.site }}">
+                                    {{ enlace.site }}
+                                </div>
                             </td>
                             <td>
-                                <button class="enlace" data-id="{{info._id['$oid']}}" onclick="visitar(this.dataset.id)">Visitar sitio web</button>
+                                <a class="enlace" href="{{ enlace.url }}" target="_blank" rel="noopener noreferrer">Visitar sitio web</a>
                             </td>
                         </tr>
+                        {% endfor %}
+                        {% if not info.links and info.link %}
+                        <tr>
+                            <td>
+                                <div>Sitio oficial</div>
+                            </td>
+                            <td>
+                                <a class="enlace" href="{{ info.link }}" target="_blank" rel="noopener noreferrer">Visitar sitio web</a>
+                            </td>
+                        </tr>
+                        {% endif %}
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 </main>
-
-<script>
-    const visitar = async (id) => {
-        try{
-            const data = {}; data["id"] = id;
-            const res = await fetch(`/article/${id}`, {
-                method: "POST", 
-                body: JSON.stringify(data),
-                headers: {"Content-Type" : "application/json"}
-            });
-            const json = await res.json();
-            
-            if(!res.ok) throw new Error(`Ocurrio un error ${res.status} - ${res.statusText}`);
-
-            window.open(`${json[0].link}`, "_blank");
-        } catch(err){
-            console.log(err);
-        }
-    };
-</script>
 {% endblock %}

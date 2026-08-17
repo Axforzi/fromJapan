@@ -6,16 +6,16 @@
             <div class="navbar-collapse">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a href="/" class="nav-link">Inicio</a>
+                        <a href="/" class="nav-link {{'active' if request.path == '/' else ''}}">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a href="/animes" class="nav-link">Animes</a>
+                        <a href="/animes" class="nav-link {{'active' if request.path.startswith('/animes') else ''}}">Animes</a>
                     </li>
                     <li class="nav-item">
-                        <a href="/mangas" class="nav-link">Manga</a>
+                        <a href="/mangas" class="nav-link {{'active' if request.path.startswith('/mangas') else ''}}">Manga</a>
                     </li>
                     <li class="nav-item">
-                        <a href="/novelas" class="nav-link">Novelas</a>
+                        <a href="/novelas" class="nav-link {{'active' if request.path.startswith('/novelas') else ''}}">Novelas</a>
                     </li>
                 </ul>
             </div>

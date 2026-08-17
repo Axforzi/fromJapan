@@ -10,11 +10,12 @@
             <h3 class="carrusel-caption">{{img.titulo}}</h3>
             <a href="{{img.link}}" class="carrusel-link" class="btn btn-success">VER</a>
             <div class="buttons">
-                <button class="fa-solid fa-chevron-left" onclick="anterior()"></button>
-                <button class="fa-solid fa-chevron-right" onclick="siguiente()"></button>
+                <button class="fa-solid fa-chevron-left" onclick="anterior()" aria-label="Anterior"></button>
+                <button class="fa-solid fa-chevron-right" onclick="siguiente()" aria-label="Siguiente"></button>
             </div>
         </div>
     {% endfor %}
+    <div class="carrusel-dots"></div>
 </div>
 
 <main class="content">

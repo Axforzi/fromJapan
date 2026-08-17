@@ -58,7 +58,6 @@ main > h1{
 
 .tabla td{
     padding: 10px 20px;
-    text-align: justify;
 }
 
 .tabla td:nth-child(2){

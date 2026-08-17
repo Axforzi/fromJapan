@@ -1,34 +1,91 @@
 footer{
     display: flex;
     flex-direction: column;
-    align-items: center;
+    margin-top: auto;
     background: var(--color-primary);
     color: white;
 }
 
-footer .redes{
+footer .footer-columns{
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    gap: 25px;
+    padding: 25px 20px;
+    width: 100%;
+}
+
+footer .footer-col{
     display: flex;
     flex-direction: column;
-    padding: 15px;
+    align-items: flex-start;
+    gap: 12px;
+    max-width: 300px;
 }
 
-footer .redes a{
-    text-decoration: none;
-    color: rgb(67, 207, 218);
+footer .footer-col h5{
+    color: var(--color-green);
+    font-size: 18px;
+    border-bottom: 2px solid var(--color-green);
+    padding-bottom: 5px;
 }
 
-.platforms{
+footer .footer-col ul{
+    list-style: none;
+    padding: 0;
+    margin: 0;
     display: flex;
-    justify-content: space-around;
+    flex-direction: column;
+    gap: 8px;
+}
+
+footer .footer-col ul a{
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.85);
+    transition: color .2s linear;
+}
+
+footer .footer-col ul a:hover{
+    color: var(--color-green);
+}
+
+footer .attribution{
+    font-size: 13px;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.75);
+}
+
+footer .attribution a{
+    color: var(--color-green);
+    text-decoration: none;
+}
+
+footer .attribution a:hover{
+    text-decoration: underline;
 }
 
 footer .rights{
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 5px;
-    height: 100%;
+    padding: 8px;
     width: 100%;
     color: white;
     background: rgb(6, 28, 56);
+}
+
+@media screen and (max-width: 992px) {
+    footer .footer-columns{
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    footer .footer-col{
+        align-items: center;
+    }
+
+    footer .footer-col ul{
+        align-items: center;
+    }
 }
