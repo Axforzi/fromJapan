@@ -110,6 +110,7 @@ def admin_generos():
     return render_template("pages/admin/generos.html", generos = data.json, current_page = 1)
 
 @admin.route("/generos/page/<number>")
+@login_required
 def admin_generos_page(number):
     data = get_generos_service(int(number)-1)
     return render_template("pages/admin/generos.html", generos = data.json, current_page = int(number))
@@ -156,16 +157,19 @@ def delete_genero():
 
 # CARRUSEL
 @admin.route("/carrusel")
+@login_required
 def get_carrusel_config():
     data = get_carrusels_service()
     return render_template("/pages/admin/carrusel.html", imgs = data.json)
 
 @admin.route("/carrusel/<id>")
+@login_required
 def get_carrusel(id):
     data = get_carrusel_service(id)
     return data
 
 @admin.route("/carrusel/new", methods=["POST"])
+@login_required
 def new_carrusel():
     created = new_carrusel_service()
     if created == 1:
@@ -179,6 +183,7 @@ def new_carrusel():
         return redirect("/admin/carrusel")
     
 @admin.route("/carrusel/edit", methods=["POST"])
+@login_required
 def edit_carrusel():
     updated = edit_carrusel_service(request.form.get("id"))
     if updated == 1:
@@ -192,6 +197,7 @@ def edit_carrusel():
         return redirect("/admin/carrusel")
 
 @admin.route("/carrusel/delete", methods=["POST"])
+@login_required
 def delete_carrusel():
     deleted = delete_carrusel_service(request.form.get("id"))
     if str(deleted.id) == request.form.get("id"):

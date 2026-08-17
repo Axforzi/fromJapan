@@ -1,6 +1,8 @@
-from flask_login import UserMixin
-import mongoengine as me
 import datetime
+
+import mongoengine as me
+from flask_login import UserMixin
+from werkzeug.security import check_password_hash, generate_password_hash
 
 class articulos(me.Document):
     titulo = me.StringField()
@@ -11,6 +13,7 @@ class articulos(me.Document):
     generos = me.ListField(me.StringField())
     autor = me.StringField()
     link = me.StringField()
+    links = me.ListField(me.DictField())
     createdAt = me.DateTimeField(required=True, default=datetime.datetime.now)
     updatedAt = me.DateTimeField(required=True, default=datetime.datetime.now)
 
@@ -29,9 +32,15 @@ class users(me.Document, UserMixin):
     createdAt = me.DateTimeField(required=True, default=datetime.datetime.now)
     updatedAt = me.DateTimeField(required=True, default=datetime.datetime.now)
 
+    def set_password(self, raw_password):
+        self.password = generate_password_hash(raw_password)
+
+    def check_password(self, raw_password):
+        return check_password_hash(self.password, raw_password)
+
 class carrusel(me.Document):
     titulo = me.StringField()
     link = me.StringField()
     ruta = me.StringField()
-    createdAt = me.DateField(required=True, default=datetime.datetime.now())
-    updatedAt = me.DateField(required=True, default=datetime.datetime.now())
+    createdAt = me.DateTimeField(required=True, default=datetime.datetime.now)
+    updatedAt = me.DateTimeField(required=True, default=datetime.datetime.now)

@@ -1,6 +1,6 @@
 from flask import Blueprint
 from flask import render_template, redirect, abort, request
-from services.index import recent_animes, recent_mangas, recent_novelas, get_busqueda_service, get_animes_service, get_mangas_service, get_novelas_service, get_article_anime_service, get_article_novela_service, get_article_manga_service, get_article_service, get_animes_filter_service, get_mangas_filter_service, get_novelas_filter_service
+from services.index import recent_animes, recent_mangas, recent_novelas, get_busqueda_service, get_animes_service, get_mangas_service, get_novelas_service, get_article_anime_service, get_article_novela_service, get_article_manga_service, get_animes_filter_service, get_mangas_filter_service, get_novelas_filter_service
 from services.admin import get_carrusels_service, get_generos_service
 index = Blueprint('index', __name__)
 
@@ -127,11 +127,6 @@ def get_mangas_filter_page(number):
                            current_page = int(number))
 
 # GET ARTICLE
-@index.route("/article/<id>", methods=["POST"])
-def get_article(id):
-    data = get_article_service(id)
-    return data
-
 @index.route("/animes/<name>")
 def get_anime(name):
     data = get_article_anime_service(name)

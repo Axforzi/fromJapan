@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      mongo:
+        image: mongo:7
+        ports:
+          - 27017:27017
+    env:
+      MONGO_URI_TEST: mongodb://localhost:27017
+      MONGO_URI: mongodb://localhost:27017/fromjapan_test
+      SECRET_KEY: ci-test-secret
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "latest"
+
+      - name: Install dependencies
+        run: uv sync --dev
+
+      - name: Wait for MongoDB to be ready
+        run: |
+          python - <<'PY'
+          import time
+          from pymongo import MongoClient
+          for _ in range(30):
+              try:
+                  MongoClient("mongodb://localhost:27017", serverSelectionTimeoutMS=1000).admin.command("ping")
+                  print("mongodb ready")
+                  break
+              except Exception as e:
+                  time.sleep(1)
+          else:
+              raise SystemExit("mongodb never became ready")
+          PY
+
+      - name: Run tests
+        run: uv run pytest -q

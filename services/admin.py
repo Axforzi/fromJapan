@@ -1,19 +1,26 @@
 import datetime
-from flask import request, Response, flash
-from flask_login import login_user
-from schema.index import articulos, users, generos, carrusel
-from bson import ObjectId
-from werkzeug.utils import secure_filename
-import numpy as np
 import math
 import os
-from bson import json_util
+
+from bson import ObjectId, json_util
+from flask import Response, flash, request
+from flask_login import login_user
+from werkzeug.utils import secure_filename
+
+from schema.index import articulos, carrusel, generos, users
+
+ALLOWED_EXTENSIONS = {".png", ".jpg", ".jpeg", ".gif", ".webp"}
+
+
+def _valid_extension(filename: str) -> bool:
+    """Devuelve True si la extensión del archivo está permitida."""
+    return os.path.splitext(filename)[1].lower() in ALLOWED_EXTENSIONS
 
 def login_service():
     data = request.form
     user = users.objects(username=data.get("username")).first()
     if user:
-        if user.password == data.get("password"):
+        if user.check_password(data.get("password")):
             login_user(user)
             return True
         else:
@@ -39,17 +46,17 @@ def get_articulo_service(id):
 
 def new_articulo_service():
     article = request.form.to_dict()
-    article["generos"] = np.array(article["generos"].split(" - "))
+    article["generos"] = [g.strip() for g in article["generos"].split(" - ") if g.strip()]
     article["tipo"] = article["tipo"].lower()
 
-    # GET FILE FOR COVER
+# GET FILE FOR COVER
     file = request.files["img"]
     extension = os.path.splitext(file.filename)[1]
     filename = secure_filename(datetime.datetime.now().strftime("%m-%d-%Y_%H-%M-%S") + "_" + article["titulo"] + extension)
     path_name = "/static/img/portadas/" + filename
     article["portada"] = path_name
 
-    if (extension == ".png") or (extension == ".jpg") or (extension == ".jpeg"):
+    if _valid_extension(file.filename):
         data = articulos(**article)
         created = data.save()
         file.save(os.path.join(os.getcwd(), "static", "img", "portadas", filename))
@@ -63,9 +70,9 @@ def edit_articulo_service(id):
 
     # CREATE OBJECT TO UPDATE
     article = request.form.to_dict()
-    article.pop("id")
-    article["generos"] = np.array(article["generos"].split(" - "))
-    article["updatedAt"] = datetime.datetime.now
+    article.pop("id", None)
+    article["generos"] = [g.strip() for g in article["generos"].split(" - ") if g.strip()]
+    article["updatedAt"] = datetime.datetime.now()
     article["tipo"] = article["tipo"].lower()
 
     # GET FILE FOR COVER
@@ -75,7 +82,7 @@ def edit_articulo_service(id):
     path_route = "/static/img/portadas/" + filename
 
     if file.filename != "":
-        if (extension == ".png") or (extension == ".jpg") or (extension == ".jpeg"):
+        if _valid_extension(file.filename):
             article["portada"] = path_route
             updated = data.update(**article)
 
@@ -87,12 +94,13 @@ def edit_articulo_service(id):
             return 3
     else:
         updated = data.update(**article)
-        return updated
+        return 1 if updated else 2
 
 def delete_articulo_service(id):
     data = articulos.objects(id=ObjectId(id)).first()
-    
-    os.remove(os.path.join(os.getcwd(), "static", "img", "portadas", data.portada.split("/")[-1]))
+    if not data:
+        return None
+    _safe_remove(os.path.join(os.getcwd(), "static", "img", "portadas", data.portada.split("/")[-1]))
     data.delete()
     return data
 
@@ -157,11 +165,20 @@ def new_genero_service():
 
 def edit_genero_service(id):
     data = generos.objects(id=ObjectId(id)).first()
-    updated = data.update(nombre = request.form.get("nombre"), updatedAt=datetime.datetime.now)
+    updated = data.update(nombre = request.form.get("nombre"), updatedAt=datetime.datetime.now())
     return updated
+
+def _safe_remove(path: str) -> None:
+    """Elimina un archivo ignorando errores de 'file not found'."""
+    try:
+        os.remove(path)
+    except FileNotFoundError:
+        pass
 
 def delete_genero_service(id):
     data = generos.objects(id=ObjectId(id)).first()
+    if not data:
+        return None
     data.delete()
     return data
 
@@ -180,9 +197,8 @@ def get_carrusel_service(id):
 def new_carrusel_service():
     file = request.files["img"]
     filename = secure_filename(datetime.datetime.now().strftime("%m-%d-%Y_%H-%M-%S") + "_" + file.filename)
-    extension = os.path.splitext(filename)[1]
 
-    if (extension == ".png") or (extension == ".jpg") or (extension == ".jpeg"):
+    if _valid_extension(file.filename):
         path_name = "/static/img/carrusel/" + filename
         data = carrusel(titulo = request.form.get("titulo"), link = request.form.get("link"), ruta = path_name)
         file.save(os.path.join(os.getcwd(), "static", "img", "carrusel", filename))
@@ -192,33 +208,36 @@ def new_carrusel_service():
         return 3
 
 def edit_carrusel_service(id):
-    data = carrusel(id=ObjectId(id))
+    data = carrusel.objects(id=ObjectId(id)).first()
+    if not data:
+        return 2
 
     file = request.files["img"]
     filename = secure_filename(datetime.datetime.now().strftime("%m-%d-%Y_%H-%M-%S") + "_" + file.filename)
-    extension = os.path.splitext(filename)[1]
 
     # VALIDATE IF THERE IS A FILE
     if file.filename != "":
         # VALIDATE EXTENSION
-        if (extension == ".png") or (extension == ".jpg") or (extension == ".jpeg"):
-            os.remove(os.path.join(os.getcwd(), "static", "img", "carrusel", request.form.get("last-file"))) # ELIMINAR ANTERIOR IMG
+        if _valid_extension(file.filename):
             path_name = "/static/img/carrusel/" + filename
 
-            #SAVE FILE AND INFO ON THE DB
-            updated = data.update(titulo = request.form.get("titulo"), link = request.form.get("link"), ruta = path_name, updatedAt = datetime.datetime.now)
-            os.remove(os.path.join(os.getcwd(), "static", "img", "carrusel", data.ruta.split("/")[-1]))
+            # SAVE FILE AND INFO ON THE DB
+            updated = data.update(titulo = request.form.get("titulo"), link = request.form.get("link"), ruta = path_name, updatedAt = datetime.datetime.now())
+
+            _safe_remove(os.path.join(os.getcwd(), "static", "img", "carrusel", data.ruta.split("/")[-1]))
             file.save(os.path.join(os.getcwd(), "static", "img", "carrusel", filename))
-            
+
             return 1 if updated else 2
         else:
             return 3
     else:
-        updated = data.update(titulo = request.form.get("titulo"), link = request.form.get("link"), updatedAt = datetime.datetime.now)
-        return updated
+        updated = data.update(titulo = request.form.get("titulo"), link = request.form.get("link"), updatedAt = datetime.datetime.now())
+        return 1 if updated else 2
 
 def delete_carrusel_service(id):
     data = carrusel.objects(id=ObjectId(id)).first()
-    os.remove(os.path.join(os.getcwd(), "static", "img", "carrusel", data.ruta.split("/")[-1]))
+    if not data:
+        return None
+    _safe_remove(os.path.join(os.getcwd(), "static", "img", "carrusel", data.ruta.split("/")[-1]))
     data.delete()
     return data
